@@ -13,7 +13,6 @@ function help() {
 function pingFunction() {
 	if [ "$1" -eq "$1" ] &> /dev/null
 	then
-
 		ping -c 1 $IP_PREFIX$1 &> /dev/null
 
 		# the exit-code of the ping-command will be stored inside '$?'
