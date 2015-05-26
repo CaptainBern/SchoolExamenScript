@@ -1,5 +1,9 @@
 #!/bin/bash
 
+HOST_REACHABLE=0
+HOST_UNREACHABLE=1
+INVALID_IP=2
+
 IP_PREFIX="192.168.0."
 
 function help() {
@@ -35,13 +39,17 @@ function pingFunction() {
 		# for more info see: http://www.manpagez.com/man/8/ping/
 		if [[ "$?" == 0 ]]; 
 		then
-			echo "$IP_PREFIX$1 is up"
+			echo "$HOST_REACHABLE"
 		else 
-			echo "$IP_PREFIX$1 is unreachable"
+			echo "$HOST_UNREACHABLE"
 		fi
 	else
-		echo "$IP_PREFIX$1 is not a valid ip-address!"
+		echo "$INVALID_IP"
 	fi
+}
+
+function addIPToList() {
+	IP_LIST="$IP_LIST $1"
 }
 
 # main loop/case stuff
@@ -57,9 +65,14 @@ else
 				help
 				;;	
 			* )
-				pingFunction $1
+				addIPToList $1
 				;;
 			esac
 		shift
 	done
 fi
+
+for ip in $IP_LIST 
+do
+	pingFunction $ip
+done
