@@ -3,7 +3,22 @@
 IP_PREFIX="192.168.0."
 
 function help() {
-	echo "Lol kk"
+	clear
+    echo "NAME"
+    echo "  Pinger - A tool used to ping a range of IP's"
+    echo ""
+    echo "SYNOPSIS"
+    echo "  $0 [OPTION]... [bla]"
+    echo ""
+    echo "DESCRIPTION"
+    echo "  Pinger was made to verify the status of 1 or more IP adresses in"
+    echo "  a local area network."
+    echo ""
+    echo "OPTIONS"
+    echo "  -h,"
+    echo ""
+    echo "AUTHOR"
+    echo "  Witten by Verscheure Bengt and Miers Maarten."
 	exit
 }
 
