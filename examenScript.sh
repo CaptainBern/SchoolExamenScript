@@ -16,31 +16,30 @@ function pingFunction() {
 	# in case it's 0, the ping was successful. 
 	# for more info see: http://www.manpagez.com/man/8/ping/
 	if [[ "$?" == 0 ]]; 
-	then
-		echo "$HOST_REACHABLE"
-	else 
-		echo "$HOST_UNREACHABLE"
+		then
+			echo "$HOST_REACHABLE"
+		else 
+			echo "$HOST_UNREACHABLE"
 	fi
 }
 
 function addIPToList() {
 	if [ "$1" -eq "$1" ] &> /dev/null
-	then
-            IP_LIST="$IP_LIST $1"
-	
-	else
-		echo "Invalid IP address, please use the helpfunction: -help"
+		then
+			IP_LIST="$IP_LIST $1"
+		else
+			echo "Invalid IP address, please use the helpfunction: -help"
 	fi
 }
 
 function addIPToRange() {
-arg="$1"
+	arg="$1"
 
-for (( i=(${arg/-*/}); i <= (${arg/*-/}); i++))
-	do
-    	addIPToList "$i"
-		#echo $i
-	done
+	for (( i=(${arg/-*/}); i <= (${arg/*-/}); i++))
+		do
+    		addIPToList "$i"
+			#echo $i
+		done
 }
 
 # main loop/case stuff
@@ -87,9 +86,9 @@ else
 fi
 
 for IP in $IP_LIST 
-do
-	pingFunction $IP
-done
+	do
+		pingFunction $IP
+	done
 
 #PLACE ON TOP PLIZ
 function help() {
