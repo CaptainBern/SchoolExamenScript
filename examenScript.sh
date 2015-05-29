@@ -29,9 +29,18 @@ function addIPToList() {
             IP_LIST="$IP_LIST $1"
 	
 	else
-		# if the exit-code is 2, then the IP adress will be marked invalid.
-		echo "$IP_PREFIX$1 is an invalid IP address"
+		echo "Invalid IP address, please use the helpfunction: -help"
 	fi
+}
+
+function addIPToRange() {
+arg="$1"
+
+for (( i=(${arg/-*/}); i <= (${arg/*-/}); i++))
+	do
+    	addIPToList "$i"
+		#echo $i
+	done
 }
 
 # main loop/case stuff
@@ -43,9 +52,32 @@ else
 	until [ -z $1 ]
 	do
 		case $1 in
+			[a-z]* )   #check for letters?
+				echo "Invalid character! Please use the helpfunction: -help"
+				;;
+
 			-h | -help )
 				help
-				;;	
+				;;
+
+			--up )
+				up="true"
+				;;
+
+			--sum )
+				sum="true"
+				;;
+                        
+			--sort )
+				sorting="true"
+				;;
+
+			*[0-9]-[0-9]* ) addIPToRange $1
+				;;
+
+			-t )	
+				;;
+	
 			* )
 				addIPToList $1
 				;;
@@ -54,9 +86,9 @@ else
 	done
 fi
 
-for ip in $IP_LIST 
+for IP in $IP_LIST 
 do
-	pingFunction $ip
+	pingFunction $IP
 done
 
 #PLACE ON TOP PLIZ
