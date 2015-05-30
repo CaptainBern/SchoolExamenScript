@@ -1,123 +1,14 @@
 #!/bin/bash
-
+ 
+# 'global' variables
 HOST_REACHABLE=0
 HOST_UNREACHABLE=1
 INVALID_IP=2
-
-IP_PREFIX="192.168.0."
-
-# Ping-function
-# will ping given ip and print a message depending
-# on the ping-result
-function pingFunction() {
-	ping -c 1 $IP_PREFIX$1 &> /dev/null
-
-	# the exit-code of the ping-command will be stored inside '$?'
-	# in case it's 0, the ping was successful. 
-	# for more info see: http://www.manpagez.com/man/8/ping/
-	if [[ "$?" == 0 ]]; 
-		then
-			echo "$HOST_REACHABLE"
-		else 
-			echo "$HOST_UNREACHABLE" 
-	fi
-}
-
-function addIPToList() {
-	if [ "$1" -eq "$1" ] &> /dev/null
-		then
-			IP_LIST="$IP_LIST $1"
-		else
-			echo "Invalid IP address, please use the helpfunction: -help"
-	fi
-}
-
-#This function will see whether the input after "-t" is an integer or not.
-#http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
-function checkForInt() {
-	if [ "$1" -eq "$1" ] 2>/dev/null 
-		then 
-			addIPToList "$(( $1 + 100 ))" # CHANGE TO 200, tesing atm. 
-		else 
-			addNumToIPRange $1  
-	fi
-}
-
-function addIPToRange() {
-	arg="$1"
-	left="${arg/-*/}"
-	right="${arg/*-/}"
-
-	for (( i=($left); i <= ($right); i++))
-		do
-    		#addIPToList "$i"
-			echo $i #experimental
-		done
-}
-
-function addNumToIPRange () {
-	arg="$1"
-    left="$((${arg/-*/} + 100 ))" # change to 200
-    right="$((${arg/*-/} + 100))"
-    
-    for (( i=($left); i <= ($right); i++))
-        do
-            #addIPToList "$i"
-            echo $i
-        done
-}
-
-# main loop/case stuff
-if [ -z "$1" ]
-then
-	echo "You did not enter a parameter. Please use '$0 -h' to show the usage."
-
-else 
-	until [ -z $1 ]
-	do
-		case $1 in
-			[a-z]* )   #check for letters?
-				echo "Invalid character! Please use the helpfunction: -help"
-				;;
-
-			-h | -help )
-				help
-				;;
-
-			--up )
-				up="true"
-				;;
-
-			--sum )
-				sum="true"
-				;;
-                        
-			--sort )
-				sorting="true"
-				;;
-
-			*[0-9]-[0-9]* ) 
-				addIPToRange $1
-				;;
-
-			-t )
-				shift; checkForInt $1	
-				;;
-	
-			[0-9]* )
-				addIPToList $1
-				;;
-			esac
-		shift
-	done
-fi
-
-for IP in $IP_LIST 
-	do
-		pingFunction $IP
-	done
-
-#PLACE ON TOP PLIZ
+ 
+# the default network address
+NETWORK_ADDRESS="192.168.0."
+ 
+# Prints the help in a man-page format
 function help() {
     clear
     echo "NAME"
@@ -157,3 +48,138 @@ function help() {
     echo "  Witten by Verscheure Bengt and Miers Maarten."
     exit
 }
+ 
+# Ping-function
+# will ping given ip and echo
+# the ping result.
+# in case it's $HOST_REACHABLE then the
+# target has responded to the ping
+# in case it's $HOST_UNREACHABLE then
+# the ping failed.
+function pingFunction() {
+        ping -c 1 $NETWORK_ADDRESS$1 &> /dev/null
+ 
+        # the exit-code of the ping-command will be stored inside '$?'
+        # in case it's 0, the ping was successful.
+        # for more info see: http://www.manpagez.com/man/8/ping/
+        if [[ "$?" == 0 ]];
+                then
+                        echo "$HOST_REACHABLE"
+                else
+                        echo "$HOST_UNREACHABLE"
+        fi
+}
+ 
+# This function will add the
+# given host address to the list
+function addHostToList() {
+        if [ "$1" -eq "$1" ] &> /dev/null
+                then
+                        HOST_LIST="$HOST_LIST $1"
+                else
+                        echo "$INVALID_IP"
+        fi
+}
+ 
+#This function will see whether the input after "-t" is an integer or not.
+#http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
+function checkForInt() {
+        if [ "$1" -eq "$1" ] 2>/dev/null
+                then
+                        addHostToList "$(( $1 + 100 ))" # CHANGE TO 200, tesing atm.
+                else
+                        addNumToIPRange $1
+        fi
+}
+ 
+# This function adds the given
+# range of host-addresses to the HOST_LIST
+function addIPToRange() {
+        arg="$1"
+        left="${arg/-*/}"
+        right="${arg/*-/}"
+ 
+        for (( i=($left); i <= ($right); i++))
+                do
+                addHostToList "$i"
+                done
+}
+ 
+function addNumToIPRange () {
+        arg="$1"
+    left="$((${arg/-*/} + 100 ))" # change to 200
+    right="$((${arg/*-/} + 100))"
+ 
+    for (( i=($left); i <= ($right); i++))
+        do
+            #addHostToList "$i"
+            echo $i
+        done
+}
+ 
+# main loop/case stuff
+up=false
+sum=false
+sort=false
+ 
+if [ -z "$1" ]
+then
+        echo "You did not enter a parameter. Please use '$0 -h' to show the usage."
+ 
+else
+        until [ -z $1 ]
+        do
+                case $1 in
+                        [a-z]* )   #check for letters?
+                                echo "Invalid character! Please use the helpfunction: -help"
+                                ;;
+ 
+                        -h | -help )
+                                help
+                                ;;
+ 
+                        --up )
+                                up=true
+                                ;;
+ 
+                        --sum )
+                                sum=true
+                                ;;
+ 
+                        --sort )
+                                sorting=true
+                                ;;
+ 
+                        *[0-9]-[0-9]* )
+                                addIPToRange $1
+                                ;;
+ 
+                        -t )
+                                shift;
+                                checkForInt $1
+                                ;;
+ 
+                        [0-9]* )
+                                addHostToList $1
+                                ;;
+                        esac
+                shift
+        done
+fi
+ 
+if [ "$sort" = true ]
+        then
+        # TODO: sort the host-addresses
+fi
+ 
+if [ "$up" = true ]
+        then
+        # TODO: ping each address, add to result list
+else
+        then
+fi
+ 
+if [ "$sum" = true ]
+        then
+        # TODO: print summary
+fi
