@@ -19,7 +19,7 @@ function pingFunction() {
 		then
 			echo "$HOST_REACHABLE"
 		else 
-			echo "$HOST_UNREACHABLE"
+			echo "$HOST_UNREACHABLE" 
 	fi
 }
 
@@ -32,14 +32,39 @@ function addIPToList() {
 	fi
 }
 
+#This function will see whether the input after "-t" is an integer or not.
+#http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
+function checkForInt() {
+	if [ "$1" -eq "$1" ] 2>/dev/null 
+		then 
+			addIPToList "$(( $1 + 100 ))" # CHANGE TO 200, tesing atm. 
+		else 
+			addNumToIPRange $1  
+	fi
+}
+
 function addIPToRange() {
 	arg="$1"
+	left="${arg/-*/}"
+	right="${arg/*-/}"
 
-	for (( i=(${arg/-*/}); i <= (${arg/*-/}); i++))
+	for (( i=($left); i <= ($right); i++))
 		do
-    		addIPToList "$i"
-			#echo $i
+    		#addIPToList "$i"
+			echo $i #experimental
 		done
+}
+
+function addNumToIPRange () {
+	arg="$1"
+    left="$((${arg/-*/} + 100 ))" # change to 200
+    right="$((${arg/*-/} + 100))"
+    
+    for (( i=($left); i <= ($right); i++))
+        do
+            #addIPToList "$i"
+            echo $i
+        done
 }
 
 # main loop/case stuff
@@ -71,13 +96,15 @@ else
 				sorting="true"
 				;;
 
-			*[0-9]-[0-9]* ) addIPToRange $1
+			*[0-9]-[0-9]* ) 
+				addIPToRange $1
 				;;
 
-			-t )	
+			-t )
+				shift; checkForInt $1	
 				;;
 	
-			* )
+			[0-9]* )
 				addIPToList $1
 				;;
 			esac
