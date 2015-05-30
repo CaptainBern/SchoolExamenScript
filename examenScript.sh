@@ -120,7 +120,7 @@ function addNumToIPRange () {
 # main loop/case stuff
 up=false
 sum=false
-sort=false
+sorting=false
  
 if [ -z "$1" ]
 then
@@ -139,15 +139,15 @@ else
                                 ;;
  
                         --up )
-                                up=true
+                                $up=true
                                 ;;
  
                         --sum )
-                                sum=true
+                                $sum=true
                                 ;;
  
                         --sort )
-                                sorting=true
+                                $sorting=true
                                 ;;
  
                         *[0-9]-[0-9]* )
@@ -167,7 +167,7 @@ else
         done
 fi
  
-if [ "$sort" = true ]
+if [ "$sorting" = true ]
         then
         # TODO: sort the host-addresses
 fi
