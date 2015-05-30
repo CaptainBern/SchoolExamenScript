@@ -46,7 +46,7 @@ function help() {
     echo ""
     echo "AUTHOR"
     echo "  Witten by Verscheure Bengt and Miers Maarten."
-    exit
+    exit 1
 }
  
 # Ping-function
@@ -62,7 +62,7 @@ function pingFunction() {
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
         # for more info see: http://www.manpagez.com/man/8/ping/
-        if [[ "$?" == 0 ]];
+        if [[ "$?" == 0 ]]
                 then
                         echo "$HOST_REACHABLE"
                 else
@@ -85,10 +85,10 @@ function addHostToList() {
 #http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
 function checkForInt() {
         if [ "$1" -eq "$1" ] 2>/dev/null
-                then
-                        addHostToList "$(( $1 + 100 ))" # CHANGE TO 200, tesing atm.
-                else
-                        addNumToIPRange $1
+       		then
+        	        addHostToList "$(( $1 + 100 ))" # CHANGE TO 200, tesing atm.
+            	else
+                	addNumToIPRange $1
         fi
 }
  
@@ -125,6 +125,7 @@ sorting=false
 if [ -z "$1" ]
 then
         echo "You did not enter a parameter. Please use '$0 -h' to show the usage."
+	exit 1
  
 else
         until [ -z $1 ]
@@ -167,19 +168,22 @@ else
         done
 fi
  
-if [ "$sorting" = true ]
-        then
+if [ "$sorting" = true ]; 
+	then
+		echo "sorting!"
         # TODO: sort the host-addresses
 fi
  
-if [ "$up" = true ]
-        then
+if [ "$up" = true ] 
+	then
+		echo "upping!"
         # TODO: ping each address, add to result list
-else
-        then
+	else
+		echo "Nope-ing!"
 fi
  
 if [ "$sum" = true ]
-        then
+	then
+		echo "summing!"
         # TODO: print summary
 fi
