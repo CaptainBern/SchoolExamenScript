@@ -173,13 +173,33 @@ if [ "$sorting" = true ];
 		echo "sorting!"
         # TODO: sort the host-addresses
 fi
- 
-if [ "$up" = true ] 
+
+# loop through the HOST_LIST
+for host in "${HOST_LIST[@]}"
+do
+	result=$(pingFunction $host)
+
+	if [ "$result" -eq "$HOST_REACHABLE" ]
 	then
-		echo "upping!"
-        # TODO: ping each address, add to result list
+		UP_LIST="$UP_LIST $host"
 	else
-		echo "Nope-ing!"
+		DOWN_LIST="$DOWN_LIST $host"
+	fi
+done
+
+# loop over the UP_LIST
+for host in "${UP_LIST[@]}"
+do
+	echo "$host is up"
+done
+
+# the --up flag isn't set so we can also display the hosts that are down
+if [ "$up" = false ] 
+	then
+		for host in "${DOWN_LIST[@]}"
+		do
+			echo "$host is down"
+		done
 fi
  
 if [ "$sum" = true ]
