@@ -11,43 +11,43 @@ NETWORK_ADDRESS="192.168.$SUBNET."
  
 # Prints the help in a man-page format
 function help() {
-    clear
-    echo "NAME"
-    echo "  Pinger - A tool used to ping a range of IP's."
-    echo ""
-    echo "SYNOPSIS"
-    echo "  $0 [OPTION] [IP_1] [IP_2] ... [IP_N]"
-    echo ""
-    echo "DESCRIPTION"
-    echo "  Pinger was made to verify the status of 1 or more IP addresses in"
-    echo "  a local area network."
-    echo "  e.g: $0 87 97 132"
-    echo ""
-    echo "OPTIONS"
-    echo "  -h, -help"
-    echo "      help will show the user basic information about the script"
-    echo ""
-    echo "  -t"
-    echo "      this adds 200 to each number, e.g: -t 17 will test IP 217"
-    echo ""
-    echo "  --up"
-    echo "      shows you all the IP's that are up and running"
-    echo ""
-    echo "  --sum"
-    echo "      shows you a summary table of all the failed and successful pings"
-    echo ""
-    echo "  --sort"
-    echo "      pings unique IP's in descending order"
-    echo ""
-    echo "  -sn [subnet], -sn[subnet]"
-    echo '      "-sn 128" will test the subnetwork: 128 and not 192.168."129".0/24 '
-    echo ""
-    echo "  -mac"
-    echo "      every successful ping will receive the corresponding MAC-address"
-    echo ""
-    echo "AUTHOR"
-    echo "  Witten by Verscheure Bengt and Miers Maarten."
-    exit 1
+	clear
+	echo "NAME"
+	echo "  Pinger - A tool used to ping a range of IP's."
+	echo ""
+	echo "SYNOPSIS"
+	echo "  $0 [OPTION] [IP_1] [IP_2] ... [IP_N]"
+	echo ""
+	echo "DESCRIPTION"
+	echo "  Pinger was made to verify the status of 1 or more IP addresses in"
+	echo "  a local area network."
+	echo "  e.g: $0 87 97 132"
+	echo ""
+	echo "OPTIONS"
+	echo "  -h, -help"
+	echo "      help will show the user basic information about the script"
+	echo ""
+	echo "  -t"
+	echo "      this adds 200 to each number, e.g: -t 17 will test IP 217"
+	echo ""
+	echo "  --up"
+	echo "      shows you all the IP's that are up and running"
+	echo ""
+	echo "  --sum"
+	echo "      shows you a summary table of all the failed and successful pings"
+	echo ""
+	echo "  --sort"
+	echo "      pings unique IP's in descending order"
+	echo ""
+	echo "  -sn [subnet], -sn[subnet]"
+	echo '      "-sn 128" will test the subnetwork: 128 and not 192.168."129".0/24 '
+	echo ""
+	echo "  -mac"
+	echo "      every successful ping will receive the corresponding MAC-address"
+	echo ""
+	echo "AUTHOR"
+	echo "  Witten by Verscheure Bengt and Miers Maarten."
+	exit 1
 }
  
 # Ping-function
@@ -146,7 +146,7 @@ function getMacAddress() {
 	echo "$(arp -an "$1" | grep "$1" | awk '{print $4}')"	
 }
  
-# Puts up, sum, sorting and mac on the default: false
+# Puts 'up', 'sum', 'sorting' and 'mac' on the default: false
 up=false
 sum=false
 sorting=false
@@ -257,6 +257,7 @@ then
 	done
 fi
  
+# the --sum flag was enabled so print a summary of our UP & DOWN lists
 if [ $sum = true ] 
 then
 	# Print the UP_LIST first, in case it's not empty
