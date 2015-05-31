@@ -1,13 +1,13 @@
 #!/bin/bash
  
 # Default subnet
-SUBNET=0 #129
+SUBNET=129
 
 # Changes the timeout (in seconds) of the pingFunction
 TIME_OUT=5
 
 # the default network address
-NETWORK_ADDRESS="192.168.$SUBNET."
+NETWORK_ADDRESS="192.168."
  
 # Prints the help in a man-page format
 function help() {
@@ -59,7 +59,7 @@ function help() {
 function pingFunction() {
 	# -w 5 = our default timeout is 5, but this can be changed
 	# -c 1 = only send 1 ping packet
-	ping -w $TIME_OUT -c 1 $NETWORK_ADDRESS$1 &> /dev/null 
+	ping -w $TIME_OUT -c 1 $NETWORK_ADDRESS$SUBNET.$1 &> /dev/null 
  
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
@@ -137,7 +137,7 @@ function setSubnet() {
 # Returns the mac address of the given ip (in case it can be found)
 function getMacAddress() {
 	# source: http://forums.fedoraforum.org/showpost.php?p=1496180&postcount=2
-	echo "$(arp -an "$1" | grep "$1" | awk '{print $4}')"	
+	echo "$(arp -an "$NETWORK_ADDRESS$SUBNET.$1" | grep "$1" | awk '{print $4}')"	
 }
  
 # Puts 'up', 'sum', 'sorting' and 'mac' on the default: false
@@ -242,7 +242,7 @@ do
 	echo -n "$host is up"
 	if [ $mac = true ]
 	then
-		echo " --- mac: $(getMacAddress $NETWORK_ADDRESS$host)"
+		echo " --- mac: $(getMacAddress $host)"
 	fi
 	echo 
 done
