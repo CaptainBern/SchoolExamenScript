@@ -71,8 +71,8 @@ function pingFunction() {
 
 # This function is used to verify whether or not the given
 # parameter is a valid byte
-function verifyValidByte() {
-	if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -gt "0" ] &> /dev/null
+function isByte() {
+	if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -ge "0" ] &> /dev/null
 	then
 		return 0
 	else
@@ -83,7 +83,7 @@ function verifyValidByte() {
 # This function will add the
 # given host address to the list, only if it ranges between {0..255}
 function addHostToList() {
-		if verifyValidByte $1
+		if isByte $1
                 then
 			HOST_LIST="$HOST_LIST $1"
                 else
@@ -127,6 +127,18 @@ function addNumToIPRange () {
         done
 }
 
+# Sets the subnet to the given parameter
+function setSubnet() {
+	if isByte $1 
+	then
+		SUBNET=$1
+	else
+		echo "'$1' is an invalid subnet!"
+		exit
+	fi
+}
+
+# Returns the mac address of the given ip (in case it can be found)
 function getMacAddress() {
 	return $(arp -an "$1" | grep "$1" | awk '{print $4}')
 }
@@ -176,7 +188,7 @@ else
                                 ;;
 			-sn )
 				shift
-				SUBNET=$1
+				setSubnet $1
 				;;
 			-sn[0-9]* )
 				# TODO: finish
