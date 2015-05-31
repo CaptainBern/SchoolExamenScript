@@ -54,12 +54,12 @@ function help() {
 # then it will return true, otherwise
 # it will return false
 function pingFunction() {
-        ping -w 250 -c 1 $NETWORK_ADDRESS$1 &> /dev/null # wait 250ms for a reply and only send 1 ping
+	ping -c 1 $NETWORK_ADDRESS$1 > /dev/null # wait 250ms for a reply and only send 1 ping
  
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
         # for more info see: http://www.manpagez.com/man/8/ping/
-        if [[ "$?" == 0 ]]
+        if [[ $? -eq 0 ]]
                 then
                         return 0
                 else
@@ -220,7 +220,7 @@ do
 done
 
 # the --up flag isn't set so we can also display the hosts that are down
-if [ ! $up ] 
+if [ !$up ] 
 	then
 		for host in ${DOWN_LIST[@]}
 		do
