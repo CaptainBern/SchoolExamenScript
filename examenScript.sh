@@ -5,8 +5,11 @@ HOST_REACHABLE=0
 HOST_UNREACHABLE=1
 INVALID_IP=2
  
+# Default subnet
+SUBNET=129
+
 # the default network address
-NETWORK_ADDRESS="192.168.0."
+NETWORK_ADDRESS="192.168.$SUBNET."
  
 # Prints the help in a man-page format
 function help() {
@@ -121,6 +124,7 @@ function addNumToIPRange () {
 up=false
 sum=false
 sorting=false
+mac=false
  
 if [ -z "$1" ]
 then
@@ -159,6 +163,17 @@ else
                                 shift;
                                 checkForInt $1
                                 ;;
+			-sn )
+				shift
+				# TODO: verify valid
+				SUBNET=$1
+				;;
+			-sn[0-9]* )
+				# TODO: finish
+				;;
+			-mac )
+				mac=true
+				;;
  
                         [0-9]* )
                                 addHostToList $1
@@ -190,7 +205,12 @@ done
 # loop over the UP_LIST
 for host in "${UP_LIST[@]}"
 do
-	echo "$host is up"
+	echo -n "$host is up."
+	if [ "$mac" = true ]
+	then
+		echo -n " Mac: " # TODO: mac
+	fi
+	echo -e "\n"
 done
 
 # the --up flag isn't set so we can also display the hosts that are down
