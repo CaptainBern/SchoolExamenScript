@@ -8,7 +8,7 @@ TIME_OUT=5
 
 # the default network address
 NETWORK_ADDRESS="192.168."
- 
+
 # Prints the help in a man-page format
 function help() {
 	clear
@@ -224,7 +224,7 @@ fi
 
 # loop through the HOST_LIST and ping each entry. Then put the host in the correct list
 # depending on the ping result
-for host in ${HOST_LIST[@]}
+for host in $HOST_LIST
 do
 	if pingFunction $host ;
 	then
@@ -237,7 +237,7 @@ done
 # loop over the UP_LIST
 # in case the --mac flag was enabled, try to retrieve the mac
 # and print this too
-for host in ${UP_LIST[@]}
+for host in $UP_LIST
 do
 	echo -n "$host is up"
 	if [ $mac = true ]
@@ -250,28 +250,32 @@ done
 # the --up flag isn't set so we can also display the hosts that are down
 if [ $up = false ]  
 then
-	for host in ${DOWN_LIST[@]}
+	for host in $DOWN_LIST
 	do
 		echo "$host is down"
 	done
 fi
- 
+
+UP_COUNT=$(echo $UP_LIST | wc -w)
+DOWN_COUNT=$(echo $DOWN_LIST | wc -w)
+TOTAL_COUNT=$(echo $HOST_LIST | wc -w)
+
 # the --sum flag was enabled so print a summary of our UP & DOWN lists
 if [ $sum = true ] 
 then
 	# Print the UP_LIST first, in case it's not empty
-	if [ ${#UP_LIST[@]} -gt 0 ]
+	if [ $UP_COUNT -gt 0 ]
 	then
 		echo "Up = $(echo ${UP_LIST[@]} | tr ' ' ', ')"
 	fi
 
 	# Print the DOWN_LIST, again in case it's not empty
-	if [ ${#DOWN_LIST[@]} -gt 0 ]
+	if [ $DOWN_COUNT -gt 0 ]
 	then
 		echo "Down = $(echo ${DOWN_LIST[@]} | tr ' ' ', ')"
 	fi
 fi
 
-# print percentage stuff
-echo "${#UP_LIST[@]} / ${#HOST_LIST[@]} of the pinged computers are up"
-echo "That is $(( ${#UP_LIST[@]} * 100 / ${#HOST_LIST[@]} ))%"
+# Print the stats
+echo "$UP_COUNT/$TOTAL_COUNT of the pinged computers are up"
+echo "That is $(( $UP_COUNT * 100 / $TOTAL_COUNT ))% of all the computers"
