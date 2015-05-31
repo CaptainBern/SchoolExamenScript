@@ -54,7 +54,7 @@ function help() {
 # then it will return true, otherwise
 # it will return false
 function pingFunction() {
-        ping -c 1 $NETWORK_ADDRESS$1 &> /dev/null
+        ping -w 250 -c 1 $NETWORK_ADDRESS$1 &> /dev/null # wait 250ms for a reply and only send 1 ping
  
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
@@ -192,17 +192,15 @@ else
 fi
  
 # Start printing our stuff 
-
-if [ "$sorting" = true ]; 
-	then
-		echo "sorting!"
-        # TODO: sort the host-addresses
+if [ $sorting ]
+then
+	HOST_LIST=($(echo "${HOST_LIST[@]}" | tr ' ' '\n' | sort -nu | tr '\n' ' '))
 fi
 
-# loop through the HOST_LIST
-for host in $HOST_LIST
+# loop through the HOST_LISTi
+for host in ${HOST_LIST[@]}
 do
-	if pingFunction $host 
+	if pingFunction $host ;
 	then
 		UP_LIST="$UP_LIST $host"
 	else
@@ -211,10 +209,10 @@ do
 done
 
 # loop over the UP_LIST
-for host in $UP_LIST
+for host in ${UP_LIST[@]}
 do
 	echo -n "$host is up."
-	if [ "$mac" = true ]
+	if [ $mac ]
 	then
 		echo -n " Mac: $(getMacAddress $NETWORK_ADDRESS$host)"
 	fi
@@ -222,15 +220,15 @@ do
 done
 
 # the --up flag isn't set so we can also display the hosts that are down
-if [ "$up" = false ] 
+if [ ! $up ] 
 	then
-		for host in $DOWN_LIST
+		for host in ${DOWN_LIST[@]}
 		do
 			echo "$host is down"
 		done
 fi
  
-if [ "$sum" = true ]
+if [ $sum ]
 	then
 		echo "summing!"
         # TODO: print summary
