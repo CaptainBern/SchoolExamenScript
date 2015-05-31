@@ -61,9 +61,9 @@ function pingFunction() {
         # for more info see: http://www.manpagez.com/man/8/ping/
         if [[ "$?" == 0 ]]
                 then
-                        return 1
-                else
                         return 0
+                else
+                        return 1
         fi
 }
 
@@ -72,20 +72,20 @@ function pingFunction() {
 function verifyValidByte() {
 	if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -gt "0" ] &> /dev/null
 	then
-		return 1
-	else
 		return 0
+	else
+		return 1
 	fi
 }
  
 # This function will add the
-# given host address to the list, only if it ranges betwwn {0..255}
+# given host address to the list, only if it ranges between {0..255}
 function addHostToList() {
-		if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -gt "0" ] &> /dev/null
+		if verifyValidByte $1
                 then
                         HOST_LIST="$HOST_LIST $1"
                 else
-                        echo "$INVALID_IP"
+                        echo "Skipping '$1' because it's an invalid host-address! (Should be between 0 & 255)"
         fi
 }
  
@@ -123,6 +123,10 @@ function addNumToIPRange () {
             #addHostToList "$i"
             echo $i
         done
+}
+
+function getMacAddress() {
+	return $(arp -an "$1" | grep "$1" | awk '{print $4}')
 }
  
 # main loop/case stuff
@@ -170,7 +174,6 @@ else
                                 ;;
 			-sn )
 				shift
-				# TODO: verify valid
 				SUBNET=$1
 				;;
 			-sn[0-9]* )
@@ -211,7 +214,7 @@ do
 	echo -n "$host is up."
 	if [ "$mac" = true ]
 	then
-		echo -n " Mac: " # TODO: mac
+		echo -n " Mac: $(getMacAddress $NETWORK_ADDRESS$host)"
 	fi
 	echo -e "\n"
 done
