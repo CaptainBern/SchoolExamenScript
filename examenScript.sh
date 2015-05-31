@@ -194,9 +194,11 @@ else
 				shift
 				setSubnet $1
 				;;
+
 			-sn[0-9]* )
 				# TODO: finish
 				;;
+
 			-mac )
 				mac=true
 				;;
