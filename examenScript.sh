@@ -71,9 +71,9 @@ function pingFunction() {
 }
  
 # This function will add the
-# given host address to the list
+# given host address to the list, only if it ranges betwwn {0..255}
 function addHostToList() {
-        if [ "$1" -eq "$1" ] &> /dev/null
+		if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -gt "0" ] &> /dev/null
                 then
                         HOST_LIST="$HOST_LIST $1"
                 else
@@ -81,8 +81,8 @@ function addHostToList() {
         fi
 }
  
-#This function will see whether the input after "-t" is an integer or not.
-#http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
+# This function will see whether the input after "-t" is an integer or not.
+# http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
 function checkForInt() {
         if [ "$1" -eq "$1" ] 2>/dev/null
        		then
