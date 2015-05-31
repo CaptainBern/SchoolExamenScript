@@ -54,9 +54,9 @@ function help() {
 # then it will return true, otherwise
 # it will return false
 function pingFunction() {
-	# -w 1 = set the timeout to 1 second
+	# -w 5 = set the timeout to 5 seconds
 	# -c 1 = only send 1 ping packet
-	ping -w 1 -c 1 $NETWORK_ADDRESS$1 &> /dev/null # wait 250ms for a reply and only send 1 ping
+	ping -w 5 -c 1 $NETWORK_ADDRESS$1 &> /dev/null 
  
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
@@ -206,7 +206,7 @@ else
 fi
  
 # Start printing our stuff 
-if [ $sorting ]
+if [ $sorting = true ]
 then
 	# sort the host list
 	# 'sort' only works with lines, hence why we convert our array to lines
@@ -230,7 +230,7 @@ done
 for host in ${UP_LIST[@]}
 do
 	echo -n "$host is up."
-	if [ $mac ]
+	if [ $mac = true ]
 	then
 		echo -n " Mac: $(getMacAddress $NETWORK_ADDRESS$host)"
 	fi
@@ -238,7 +238,7 @@ do
 done
 
 # the --up flag isn't set so we can also display the hosts that are down
-if [ !$up ] 
+if [ $up = false ]  
 	then
 		for host in ${DOWN_LIST[@]}
 		do
@@ -246,7 +246,7 @@ if [ !$up ]
 		done
 fi
  
-if [ $sum ]
+if [ $sum = true ] 
 	then
 		echo "summing!"
         # TODO: print summary
