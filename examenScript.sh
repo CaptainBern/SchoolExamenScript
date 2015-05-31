@@ -140,7 +140,8 @@ function setSubnet() {
 
 # Returns the mac address of the given ip (in case it can be found)
 function getMacAddress() {
-	return $(arp -an "$1" | grep "$1" | awk '{print $4}')
+	# source: http://forums.fedoraforum.org/showpost.php?p=1496180&postcount=2
+	echo $(arp -an "$1" | awk '{print $4}')	
 }
  
 # main loop/case stuff
@@ -206,6 +207,8 @@ else
 fi
  
 # Start printing our stuff 
+
+# the --sort flag was set so sort the list before pinging
 if [ $sorting = true ]
 then
 	# sort the host list
@@ -215,7 +218,8 @@ then
 	HOST_LIST=($(echo "${HOST_LIST[@]}" | tr ' ' '\n' | sort -nu | tr '\n' ' '))
 fi
 
-# loop through the HOST_LISTi
+# loop through the HOST_LIST and ping each entry. Then put the host in the correct list
+# depending on the ping result
 for host in ${HOST_LIST[@]}
 do
 	if pingFunction $host ;
@@ -227,14 +231,15 @@ do
 done
 
 # loop over the UP_LIST
+# in case the --mac flag was enabled, try to retrieve the mac
+# and print this too
 for host in ${UP_LIST[@]}
 do
-	echo -n "$host is up."
+	echo "$host is up"
 	if [ $mac = true ]
 	then
 		echo -n " Mac: $(getMacAddress $NETWORK_ADDRESS$host)"
 	fi
-	echo -e "\n"
 done
 
 # the --up flag isn't set so we can also display the hosts that are down
