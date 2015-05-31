@@ -54,7 +54,9 @@ function help() {
 # then it will return true, otherwise
 # it will return false
 function pingFunction() {
-	ping -w 250 -c 1 $NETWORK_ADDRESS$1 > /dev/null # wait 250ms for a reply and only send 1 ping
+	# -w 1 = set the timeout to 1 second
+	# -c 1 = only send 1 ping packet
+	ping -w 1 -c 1 $NETWORK_ADDRESS$1 &> /dev/null # wait 250ms for a reply and only send 1 ping
  
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
@@ -195,10 +197,10 @@ fi
 if [ $sorting ]
 then
 	# sort the host list
-	# r = reversed order/descending
+	# 'sort' only works with lines, hence why we convert our array to lines
 	# n = numeric 
 	# u = unique (no dupes)
-	HOST_LIST=($(echo "${HOST_LIST[@]}" | tr ' ' '\n' | sort -rnu | tr '\n' ' '))
+	HOST_LIST=($(echo "${HOST_LIST[@]}" | tr ' ' '\n' | sort -nu | tr '\n' ' '))
 fi
 
 # loop through the HOST_LISTi
