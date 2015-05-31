@@ -97,9 +97,9 @@ function addHostToList() {
 # This function will see whether the input after "-t" is an integer or not.
 # http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
 function checkForInt() {
-        if [ "$1" -eq "$1" ] 2>/dev/null
+        if isByte $1 
 	then
-		addHostToList "$(( $1 + 200 ))" # CHANGE TO 200, tesing atm.
+		addHostToList "$(( $1 + 200 ))" 
 	else
 		addNumToIPRange $1
 	fi
@@ -107,7 +107,7 @@ function checkForInt() {
  
 # This function adds the given
 # range of host-addresses to the HOST_LIST
-function addIPToRange() {
+function addRangeToHostList() {
 	arg="$1"
 	left="${arg/-*/}"
 	right="${arg/*-/}"
@@ -182,7 +182,7 @@ else
 				;;
  
                         *[0-9]-[0-9]* )
-				addIPToRange $1
+				addRangeToHostList $1
 				;;
  
 			-t )
