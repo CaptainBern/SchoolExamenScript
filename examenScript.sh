@@ -1,7 +1,7 @@
 #!/bin/bash
  
 # Default subnet
-SUBNET=129
+SUBNET=129 #129
 
 # Changes the timeout (in seconds) of the pingFunction
 TIME_OUT=5
@@ -159,27 +159,27 @@ else
 				echo "Invalid character! Please use the helpfunction: -help"
 				;;
  
-			-h | -help )
+			-h | -help 	)
 				help
 				;;
  
-			--up )
+			--up 		)
 				up=true
 				;;
  
-			--sum )
+			--sum 		)
 				sum=true
 				;;
  
-			--sort )
+			--sort 		)
 				sorting=true
 				;;
  
-                        *[0-9]-[0-9]* )
+                        *[0-9]-[0-9]* 	)
 				addHostRangeToList $1
 				;;
  
-			-t )
+			-t 		)
 				shift
 				if isByte $1 
 				then
@@ -189,20 +189,21 @@ else
 				fi
 				;;
 
-			-sn )
+			-sn 		)
 				shift
 				setSubnet $1
 				;;
 
-			-sn[0-9]* )
-				# TODO: finish
+			-sn[0-9]* 	)
+				snet=`echo "$1" | awk -F"n" '{ print $2 }'`
+				setSubnet $snet
 				;;
 
-			-mac )
+			-mac 		)
 				mac=true
 				;;
 
-                        [0-9]* )
+                        [0-9]* 		)
 				addHostToList $1
 				;;
 			esac
