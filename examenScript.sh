@@ -75,7 +75,16 @@ function pingFunction() {
 # This function is used to verify whether or not the given
 # parameter is a valid byte
 function isByte() {
-	if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -ge "0" ] &> /dev/null
+	# check if the parameter is a byte
+	# use regex to check if the input is a number
+	# ^ = beginning of the string
+	# [0-9] = character set, matching input from 0 to 9
+	# + = one or more 
+	# $ = end of the string, else 11a would match too 
+	# (thanks regexr.com)
+	# then just use integer comparison operators to check if its within the
+	# bound of a byte
+	if [[ "$1" =~ ^[0-9]+$ ]] && [ "$1" -le "255" ] &> /dev/null && [ "$1" -ge "0" ] &> /dev/null
 	then
 		return 0
 	else
@@ -97,11 +106,11 @@ function addHostToList() {
 # This function adds the given
 # range of host-addresses to the HOST_LIST
 function addHostRangeToList() {
-	[[ $1 =~ "([0-9]+)-([0-9]+)" ]] # Use regex to split the input
+	[[ $1 =~ ([0-9]+)-([0-9]+) ]] # Use regex to split the input
 
 	left=${BASH_REMATCH[1]} # get the first number
 	right=${BASH_REMATCH[2]} # get the second number
- 
+
 	if [ $2 ] 
 	then
 		left=$(( $left + 200 ))
