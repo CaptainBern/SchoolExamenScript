@@ -1,10 +1,5 @@
 #!/bin/bash
  
-# 'global' variables
-HOST_REACHABLE=0
-HOST_UNREACHABLE=1
-INVALID_IP=2
- 
 # Default subnet
 SUBNET=129
 
@@ -55,10 +50,9 @@ function help() {
 # Ping-function
 # will ping given ip and echo
 # the ping result.
-# in case it's $HOST_REACHABLE then the
-# target has responded to the ping
-# in case it's $HOST_UNREACHABLE then
-# the ping failed.
+# in case the ping was successful
+# then it will return true, otherwise
+# it will return false
 function pingFunction() {
         ping -c 1 $NETWORK_ADDRESS$1 &> /dev/null
  
@@ -67,10 +61,21 @@ function pingFunction() {
         # for more info see: http://www.manpagez.com/man/8/ping/
         if [[ "$?" == 0 ]]
                 then
-                        echo "$HOST_REACHABLE"
+                        return 1
                 else
-                        echo "$HOST_UNREACHABLE"
+                        return 0
         fi
+}
+
+# This function is used to verify whether or not the given
+# parameter is a valid byte
+function verifyValidByte() {
+	if [ "$1" -eq "$1" ] && [ "$1" -le "255" ] && [ "$1" -gt "0" ] &> /dev/null
+	then
+		return 1
+	else
+		return 0
+	fi
 }
  
 # This function will add the
@@ -192,9 +197,7 @@ fi
 # loop through the HOST_LIST
 for host in "${HOST_LIST[@]}"
 do
-	result=$(pingFunction $host)
-
-	if [ "$result" -eq "$HOST_REACHABLE" ]
+	if pingFunction $host 
 	then
 		UP_LIST="$UP_LIST $host"
 	else
