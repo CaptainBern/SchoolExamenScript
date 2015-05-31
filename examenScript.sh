@@ -96,25 +96,21 @@ function addHostToList() {
  
 # This function adds the given
 # range of host-addresses to the HOST_LIST
-function addRangeToHostList() {
-	arg="$1"
-	left="${arg/-*/}"
-	right="${arg/*-/}"
+function addHostRangeToList() {
+	[[ $1 =~ "([0-9]+)-([0-9]+)" ]] # Use regex to split the input
+
+	left=${BASH_REMATCH[1]} # get the first number
+	right=${BASH_REMATCH[2]} # get the second number
  
+	if [ $2 ] 
+	then
+		left=$(( $left + 200 ))
+		right=$(( $right + 200 ))
+	fi
+
 	for (( i=($left); i <= ($right); i++))
 	do
 		addHostToList "$i"
-	done
-}
- 
-function addNumToIPRange () {
-	arg="$1"
-	left="$((${arg/-*/} + 200 ))" # change to 200
-	right="$((${arg/*-/} + 200))"
- 
-	for (( i=($left); i <= ($right); i++))
-	do
-		addHostToList $i
 	done
 }
 
@@ -171,7 +167,7 @@ else
 				;;
  
                         *[0-9]-[0-9]* )
-				addRangeToHostList $1
+				addHostRangeToList $1
 				;;
  
 			-t )
@@ -180,7 +176,7 @@ else
 				then
 					addHostToList $(( $1 + 200 ))
 				else
-					addNumToIPRange $1
+					addRangeToHostList $1 true
 				fi
 				;;
 
