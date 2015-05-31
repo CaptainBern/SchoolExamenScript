@@ -1,7 +1,7 @@
 #!/bin/bash
  
 # Default subnet
-SUBNET=129
+SUBNET=0 #129
 
 # the default network address
 NETWORK_ADDRESS="192.168.$SUBNET."
@@ -96,7 +96,7 @@ function addHostToList() {
 function checkForInt() {
         if [ "$1" -eq "$1" ] 2>/dev/null
        		then
-        	        addHostToList "$(( $1 + 100 ))" # CHANGE TO 200, tesing atm.
+        	        addHostToList "$(( $1 + 200 ))" # CHANGE TO 200, tesing atm.
             	else
                 	addNumToIPRange $1
         fi
@@ -117,13 +117,12 @@ function addIPToRange() {
  
 function addNumToIPRange () {
         arg="$1"
-    left="$((${arg/-*/} + 100 ))" # change to 200
-    right="$((${arg/*-/} + 100))"
+    left="$((${arg/-*/} + 200 ))" # change to 200
+    right="$((${arg/*-/} + 200))"
  
     for (( i=($left); i <= ($right); i++))
         do
-            #addHostToList "$i"
-            echo $i
+            addHostToList $i
         done
 }
 
@@ -141,10 +140,10 @@ function setSubnet() {
 # Returns the mac address of the given ip (in case it can be found)
 function getMacAddress() {
 	# source: http://forums.fedoraforum.org/showpost.php?p=1496180&postcount=2
-	echo $(arp -an "$1" | awk '{print $4}')	
+	echo "$(arp -an "$1" | grep "$1" | awk '{print $4}')"	
 }
  
-# main loop/case stuff
+# Puts up, sum, sorting and mac on the default: false
 up=false
 sum=false
 sorting=false
@@ -159,7 +158,7 @@ else
         until [ -z $1 ]
         do
                 case $1 in
-                        [a-z]* )   #check for letters?
+                        [a-z]* )   
                                 echo "Invalid character! Please use the helpfunction: -help"
                                 ;;
  
@@ -183,21 +182,22 @@ else
                                 addIPToRange $1
                                 ;;
  
-                        -t )
+						-t )
                                 shift;
                                 checkForInt $1
                                 ;;
-			-sn )
-				shift
-				setSubnet $1
-				;;
-			-sn[0-9]* )
-				# TODO: finish
-				;;
-			-mac )
-				mac=true
-				;;
- 
+
+						-sn )
+								shift
+								setSubnet $1
+								;;
+						-sn[0-9]* )
+								# TODO: finish
+								;;
+						-mac )
+								mac=true
+								;;
+
                         [0-9]* )
                                 addHostToList $1
                                 ;;
@@ -223,10 +223,10 @@ fi
 for host in ${HOST_LIST[@]}
 do
 	if pingFunction $host ;
-	then
-		UP_LIST="$UP_LIST $host"
-	else
-		DOWN_LIST="$DOWN_LIST $host"
+		then
+			UP_LIST="$UP_LIST $host"
+		else
+			DOWN_LIST="$DOWN_LIST $host"
 	fi
 done
 
@@ -234,13 +234,14 @@ done
 # in case the --mac flag was enabled, try to retrieve the mac
 # and print this too
 for host in ${UP_LIST[@]}
-do
-	echo "$host is up"
+	do
+		echo -n "$host is up "
 	if [ $mac = true ]
-	then
-		echo -n " Mac: $(getMacAddress $NETWORK_ADDRESS$host)"
+		then
+			echo "--- mac: $(getMacAddress $NETWORK_ADDRESS$host)"
 	fi
-done
+	echo ""
+	done
 
 # the --up flag isn't set so we can also display the hosts that are down
 if [ $up = false ]  
