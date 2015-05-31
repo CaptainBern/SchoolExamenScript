@@ -158,37 +158,37 @@ then
 	exit 1
  
 else
-        until [ -z $1 ]
-        do
-                case $1 in
-                        [a-z]* )   
-                                echo "Invalid character! Please use the helpfunction: -help"
-                                ;;
+	until [ -z $1 ]
+	do
+		case $1 in
+			[a-z]* )   
+				echo "Invalid character! Please use the helpfunction: -help"
+				;;
  
-                        -h | -help )
-                                help
-                                ;;
+			-h | -help )
+				help
+				;;
  
-                        --up )
-                                up=true
-                                ;;
+			--up )
+				up=true
+				;;
  
-                        --sum )
-                                sum=true
-                                ;;
+			--sum )
+				sum=true
+				;;
  
-                        --sort )
-                                sorting=true
-                                ;;
+			--sort )
+				sorting=true
+				;;
  
                         *[0-9]-[0-9]* )
-                                addIPToRange $1
-                                ;;
+				addIPToRange $1
+				;;
  
 			-t )
-                                shift;
-                                checkForInt $1
-                                ;;
+				shift
+				checkForInt $1
+				;;
 
 			-sn )
 				shift
@@ -204,11 +204,11 @@ else
 				;;
 
                         [0-9]* )
-                                addHostToList $1
-                                ;;
-                        esac
-                shift
-        done
+				addHostToList $1
+				;;
+			esac
+		shift
+	done
 fi
  
 # Start printing our stuff 
