@@ -119,7 +119,7 @@ function addHostRangeToList() {
 
 	for (( i=($left); i <= ($right); i++ ))
 	do
-		addHostToList "$i"
+		addHostToList $i
 	done
 }
 
@@ -219,12 +219,12 @@ then
 	# 'sort' only works with lines, hence why we convert our array to lines
 	# n = numeric 
 	# u = unique (no dupes)
-	HOST_LIST=($(echo "${HOST_LIST[@]}" | tr ' ' '\n' | sort -nu | tr '\n' ' '))
+	HOST_LIST=($(echo ${HOST_LIST[@]} | tr ' ' '\n' | sort -nu | tr '\n' ' '))
 fi
 
 # loop through the HOST_LIST and ping each entry. Then put the host in the correct list
 # depending on the ping result
-for host in $HOST_LIST
+for host in ${HOST_LIST[@]}
 do
 	if pingFunction $host ;
 	then
@@ -237,7 +237,7 @@ done
 # loop over the UP_LIST
 # in case the --mac flag was enabled, try to retrieve the mac
 # and print this too
-for host in $UP_LIST
+for host in ${UP_LIST[@]}
 do
 	echo -n "$host is up"
 	if [ $mac = true ]
@@ -250,15 +250,15 @@ done
 # the --up flag isn't set so we can also display the hosts that are down
 if [ $up = false ]  
 then
-	for host in $DOWN_LIST
+	for host in ${DOWN_LIST[@]}
 	do
 		echo "$host is down"
 	done
 fi
 
-UP_COUNT=$(echo $UP_LIST | wc -w)
-DOWN_COUNT=$(echo $DOWN_LIST | wc -w)
-TOTAL_COUNT=$(echo $HOST_LIST | wc -w)
+UP_COUNT=$(echo ${UP_LIST[@]} | wc -w)
+DOWN_COUNT=$(echo ${DOWN_LIST[@]} | wc -w)
+TOTAL_COUNT=$(echo ${HOST_LIST[@]} | wc -w)
 
 # the --sum flag was enabled so print a summary of our UP & DOWN lists
 if [ $sum = true ] 
