@@ -3,6 +3,9 @@
 # Default subnet
 SUBNET=0 #129
 
+# Changes the timeout (in seconds) of the pingFunction
+TIME_OUT=5
+
 # the default network address
 NETWORK_ADDRESS="192.168.$SUBNET."
  
@@ -54,9 +57,9 @@ function help() {
 # then it will return true, otherwise
 # it will return false
 function pingFunction() {
-	# -w 5 = set the timeout to 5 seconds
+	# -w 5 = our default timeout is 5, but this can be changed
 	# -c 1 = only send 1 ping packet
-	ping -w 5 -c 1 $NETWORK_ADDRESS$1 &> /dev/null 
+	ping -w $TIME_OUT -c 1 $NETWORK_ADDRESS$1 &> /dev/null 
  
         # the exit-code of the ping-command will be stored inside '$?'
         # in case it's 0, the ping was successful.
@@ -223,10 +226,10 @@ fi
 for host in ${HOST_LIST[@]}
 do
 	if pingFunction $host ;
-		then
-			UP_LIST="$UP_LIST $host"
-		else
-			DOWN_LIST="$DOWN_LIST $host"
+	then
+		UP_LIST="$UP_LIST $host"
+	else
+		DOWN_LIST="$DOWN_LIST $host"
 	fi
 done
 
