@@ -155,7 +155,7 @@ else
 	until [ -z $1 ]
 	do
 		case $1 in
-			[a-z]* )   
+			[a-z]* 		)   
 				echo "Invalid character! Please use the helpfunction: -help"
 				;;
  
