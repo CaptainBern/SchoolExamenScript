@@ -108,7 +108,7 @@ function addHostRangeToList() {
 		right=$(( $right + 200 ))
 	fi
 
-	for (( i=($left); i <= ($right); i++))
+	for (( i=($left); i <= ($right); i++ ))
 	do
 		addHostToList "$i"
 	done
@@ -172,7 +172,7 @@ else
  
 			-t )
 				shift
-				if isByte $1
+				if isByte $1 
 				then
 					addHostToList $(( $1 + 200 ))
 				else
