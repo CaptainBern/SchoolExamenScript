@@ -178,7 +178,7 @@ else
 				shift
 				if isByte $1
 				then
-					addHostList $(( $1 + 200 ))
+					addHostToList $(( $1 + 200 ))
 				else
 					addNumToIPRange $1
 				fi
