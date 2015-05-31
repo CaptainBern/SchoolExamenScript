@@ -176,7 +176,7 @@ else
 				then
 					addHostToList $(( $1 + 200 ))
 				else
-					addRangeToHostList $1 true
+					addHostRangeToList $1 true
 				fi
 				;;
 
