@@ -83,7 +83,7 @@ function verifyValidByte() {
 function addHostToList() {
 		if verifyValidByte $1
                 then
-                        HOST_LIST="$HOST_LIST $1"
+			HOST_LIST="$HOST_LIST $1"
                 else
                         echo "Skipping '$1' because it's an invalid host-address! (Should be between 0 & 255)"
         fi
@@ -191,6 +191,8 @@ else
         done
 fi
  
+# Start printing our stuff 
+
 if [ "$sorting" = true ]; 
 	then
 		echo "sorting!"
@@ -198,7 +200,7 @@ if [ "$sorting" = true ];
 fi
 
 # loop through the HOST_LIST
-for host in "${HOST_LIST[@]}"
+for host in $HOST_LIST
 do
 	if pingFunction $host 
 	then
@@ -209,7 +211,7 @@ do
 done
 
 # loop over the UP_LIST
-for host in "${UP_LIST[@]}"
+for host in $UP_LIST
 do
 	echo -n "$host is up."
 	if [ "$mac" = true ]
@@ -222,7 +224,7 @@ done
 # the --up flag isn't set so we can also display the hosts that are down
 if [ "$up" = false ] 
 	then
-		for host in "${DOWN_LIST[@]}"
+		for host in $DOWN_LIST
 		do
 			echo "$host is down"
 		done
