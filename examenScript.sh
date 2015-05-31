@@ -227,7 +227,7 @@ fi
 # depending on the ping result
 for host in ${HOST_LIST[@]}
 do
-	if pingFunction $host ;
+	if pingFunction $host 
 	then
 		UP_LIST="$UP_LIST $host"
 	else
@@ -257,6 +257,7 @@ then
 	done
 fi
 
+# Count the lists using wc
 UP_COUNT=$(echo ${UP_LIST[@]} | wc -w)
 DOWN_COUNT=$(echo ${DOWN_LIST[@]} | wc -w)
 TOTAL_COUNT=$(echo ${HOST_LIST[@]} | wc -w)
