@@ -248,6 +248,15 @@ fi
  
 if [ $sum = true ] 
 	then
-		echo "summing!"
-        # TODO: print summary
+		# Print the UP_LIST first, in case it's not empty
+		if [ ${#UP_LIST[@]} -gt 0 ]
+		then
+			echo "Up = $(echo ${UP_LIST[@]} | tr ' ' ', ')"
+		fi
+
+		# Print the DOWN_LIST, again in case it's not empty
+		if [ ${#DOWN_LIST[@]} -gt 0 ]
+		then
+			echo "Down = $(echo ${DOWN_LIST[@]} | tr ' ' ', ')"
+		fi
 fi
