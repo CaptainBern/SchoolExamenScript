@@ -140,15 +140,15 @@ else
                                 ;;
  
                         --up )
-                                $up=true
+                                up=true
                                 ;;
  
                         --sum )
-                                $sum=true
+                                sum=true
                                 ;;
  
                         --sort )
-                                $sorting=true
+                                sorting=true
                                 ;;
  
                         *[0-9]-[0-9]* )
