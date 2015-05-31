@@ -271,3 +271,7 @@ then
 		echo "Down = $(echo ${DOWN_LIST[@]} | tr ' ' ', ')"
 	fi
 fi
+
+# print percentage stuff
+echo "${#UP_LIST[@]} / ${#HOST_LIST[@]} of the pinged computers are up"
+echo "That is $(( ${#UP_LIST[@]} * 100 / ${#HOST_LIST[@]} ))%"
