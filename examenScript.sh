@@ -62,11 +62,11 @@ function pingFunction() {
         # in case it's 0, the ping was successful.
         # for more info see: http://www.manpagez.com/man/8/ping/
         if [[ $? -eq 0 ]]
-                then
-                        return 0
-                else
-                        return 1
-        fi
+	then
+		return 0
+	else
+		return 1
+	fi
 }
 
 # This function is used to verify whether or not the given
@@ -83,11 +83,11 @@ function isByte() {
 # This function will add the
 # given host address to the list, only if it ranges between {0..255}
 function addHostToList() {
-		if isByte $1
-                then
-			HOST_LIST="$HOST_LIST $1"
-                else
-                        echo "Skipping '$1' because it's an invalid host-address! (Should be between 0 & 255)"
+	if isByte $1
+	then
+		HOST_LIST="$HOST_LIST $1"
+	else
+		echo "Skipping '$1' because it's an invalid host-address! (Should be between 0 & 255)"
         fi
 }
  
@@ -95,35 +95,35 @@ function addHostToList() {
 # http://unix.stackexchange.com/questions/151654/checking-if-an-input-number-is-an-integer
 function checkForInt() {
         if [ "$1" -eq "$1" ] 2>/dev/null
-       		then
-        	        addHostToList "$(( $1 + 200 ))" # CHANGE TO 200, tesing atm.
-            	else
-                	addNumToIPRange $1
-        fi
+	then
+		addHostToList "$(( $1 + 200 ))" # CHANGE TO 200, tesing atm.
+	else
+		addNumToIPRange $1
+	fi
 }
  
 # This function adds the given
 # range of host-addresses to the HOST_LIST
 function addIPToRange() {
-        arg="$1"
-        left="${arg/-*/}"
-        right="${arg/*-/}"
+	arg="$1"
+	left="${arg/-*/}"
+	right="${arg/*-/}"
  
-        for (( i=($left); i <= ($right); i++))
-                do
-                addHostToList "$i"
-                done
+	for (( i=($left); i <= ($right); i++))
+	do
+		addHostToList "$i"
+	done
 }
  
 function addNumToIPRange () {
-        arg="$1"
-    left="$((${arg/-*/} + 200 ))" # change to 200
-    right="$((${arg/*-/} + 200))"
+	arg="$1"
+	left="$((${arg/-*/} + 200 ))" # change to 200
+	right="$((${arg/*-/} + 200))"
  
-    for (( i=($left); i <= ($right); i++))
-        do
-            addHostToList $i
-        done
+	for (( i=($left); i <= ($right); i++))
+	do
+		addHostToList $i
+	done
 }
 
 # Sets the subnet to the given parameter
@@ -182,21 +182,21 @@ else
                                 addIPToRange $1
                                 ;;
  
-						-t )
+			-t )
                                 shift;
                                 checkForInt $1
                                 ;;
 
-						-sn )
-								shift
-								setSubnet $1
-								;;
-						-sn[0-9]* )
-								# TODO: finish
-								;;
-						-mac )
-								mac=true
-								;;
+			-sn )
+				shift
+				setSubnet $1
+				;;
+			-sn[0-9]* )
+				# TODO: finish
+				;;
+			-mac )
+				mac=true
+				;;
 
                         [0-9]* )
                                 addHostToList $1
@@ -234,35 +234,35 @@ done
 # in case the --mac flag was enabled, try to retrieve the mac
 # and print this too
 for host in ${UP_LIST[@]}
-	do
-		echo -n "$host is up "
+do
+	echo -n "$host is up"
 	if [ $mac = true ]
-		then
-			echo "--- mac: $(getMacAddress $NETWORK_ADDRESS$host)"
+	then
+		echo " --- mac: $(getMacAddress $NETWORK_ADDRESS$host)"
 	fi
-	echo ""
-	done
+	echo 
+done
 
 # the --up flag isn't set so we can also display the hosts that are down
 if [ $up = false ]  
-	then
-		for host in ${DOWN_LIST[@]}
-		do
-			echo "$host is down"
-		done
+then
+	for host in ${DOWN_LIST[@]}
+	do
+		echo "$host is down"
+	done
 fi
  
 if [ $sum = true ] 
+then
+	# Print the UP_LIST first, in case it's not empty
+	if [ ${#UP_LIST[@]} -gt 0 ]
 	then
-		# Print the UP_LIST first, in case it's not empty
-		if [ ${#UP_LIST[@]} -gt 0 ]
-		then
-			echo "Up = $(echo ${UP_LIST[@]} | tr ' ' ', ')"
-		fi
+		echo "Up = $(echo ${UP_LIST[@]} | tr ' ' ', ')"
+	fi
 
-		# Print the DOWN_LIST, again in case it's not empty
-		if [ ${#DOWN_LIST[@]} -gt 0 ]
-		then
-			echo "Down = $(echo ${DOWN_LIST[@]} | tr ' ' ', ')"
-		fi
+	# Print the DOWN_LIST, again in case it's not empty
+	if [ ${#DOWN_LIST[@]} -gt 0 ]
+	then
+		echo "Down = $(echo ${DOWN_LIST[@]} | tr ' ' ', ')"
+	fi
 fi
