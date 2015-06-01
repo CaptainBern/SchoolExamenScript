@@ -4,7 +4,7 @@
 SUBNET=129 #129
 
 # Changes the timeout (in seconds) of the pingFunction
-TIME_OUT=5
+TIME_OUT=1
 
 # the default network address
 NETWORK_ADDRESS="192.168."
@@ -220,7 +220,7 @@ then
 	# 'sort' only works with lines, hence why we convert our array to lines
 	# n = numeric 
 	# u = unique (no dupes)
-	HOST_LIST=($(echo ${HOST_LIST[@]} | tr ' ' '\n' | sort -nu | tr '\n' ' '))
+	HOST_LIST=$(echo ${HOST_LIST[@]} | tr ' ' '\n' | sort -nu | tr '\n' ' ')
 fi
 
 # loop through the HOST_LIST and ping each entry. Then put the host in the correct list
@@ -230,32 +230,22 @@ do
 	if pingFunction $host 
 	then
 		UP_LIST="$UP_LIST $host"
+		echo -n "$host is up."
+		if [ $mac = true ]
+		then
+			echo " --- mac: $(getMacAddress $host)"
+		else 
+			echo
+		fi
 	else
 		DOWN_LIST="$DOWN_LIST $host"
+		if [ $up = false ]
+		then
+			echo "$host is down."
+		fi
+
 	fi
 done
-
-# loop over the UP_LIST
-# in case the --mac flag was enabled, try to retrieve the mac
-# and print this too
-for host in ${UP_LIST[@]}
-do
-	echo -n "$host is up"
-	if [ $mac = true ]
-	then
-		echo " --- mac: $(getMacAddress $host)"
-	fi
-	echo 
-done
-
-# the --up flag isn't set so we can also display the hosts that are down
-if [ $up = false ]  
-then
-	for host in ${DOWN_LIST[@]}
-	do
-		echo "$host is down"
-	done
-fi
 
 # Count the lists using wc
 UP_COUNT=$(echo ${UP_LIST[@]} | wc -w)
